@@ -1,0 +1,48 @@
+name: Bug Report
+description: Report a bug or unexpected diagnostic behavior in API Detective
+title: "[Bug]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for reporting an issue in **API Detective**! Please redact any real API keys, tokens, or internal URLs before submitting.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Affected Component
+      options:
+        - Deterministic Diagnostic Engine (CONN / AUTH / REQ / SCH / RES / INT)
+        - Agent Orchestrator / Root-Cause Ranking / Repair
+        - CLI (api-detective)
+        - Web Dashboard (React Frontend)
+        - FastAPI Backend Service
+        - OpenAPI / JSON Schema Parser
+        - Repository Inspector
+        - Agensi Skill Package
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and the observed output.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to Reproduce
+      description: Minimal command, payload, or OpenAPI snippet to reproduce the issue.
+      placeholder: |
+        1. Run `api-detective diagnose --url ...`
+        2. Observe finding `...`
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Environment (OS, Python version, API Detective version)
+      placeholder: "Ubuntu 24.04 / Windows 11, Python 3.12, API Detective v0.1.0-alpha.2"
+    validations:
+      required: true

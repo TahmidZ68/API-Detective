@@ -1,0 +1,54 @@
+# Environment & Secrets
+.env
+.env.*
+!.env.example
+!examples/sample_repo/.env
+*.pem
+*.key
+
+# Python Virtual Environments & Bytecode
+.venv/
+venv/
+ENV/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Frontend & Build Artifacts
+node_modules/
+dist/
+build/
+frontend/dist/
+frontend/build/
+frontend/.vite/
+*.tsbuildinfo
+
+# Test & Tool Caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+pytest-report.xml
+
+# Local Databases
+*.db
+*.sqlite
+*.sqlite3
+api_detective.db*
+
+# IDE & OS
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+*.log
+logs/
+.DS_Store
+Thumbs.db

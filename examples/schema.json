@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CreateOrderRequest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["customer_id", "amount", "currency"],
+  "properties": {
+    "customer_id": {
+      "type": "string"
+    },
+    "amount": {
+      "type": "number"
+    },
+    "currency": {
+      "type": "string",
+      "enum": ["USD", "EUR", "GBP"]
+    }
+  }
+}

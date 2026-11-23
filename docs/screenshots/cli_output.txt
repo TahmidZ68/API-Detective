@@ -1,0 +1,157 @@
+﻿┌──────────────────── API Detective Investigation Report ─────────────────────┐
+│ Investigation ID: INV-01E5F2AC                                              │
+│ Target: POST https://api.orders.example.com/v1/orders                       │
+│ Status: COMPLETED                                                           │
+│ Summary: Identified 4 finding(s) across 7 diagnostic steps. Primary root    │
+│ cause (100% confidence, confirmed): Malformed JSON in Request Payload — The │
+│ request body is not valid JSON: Expecting property name enclosed in double  │
+│ quotes at line 1, column 2.                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+                           Agent Execution Timeline                            
+┌──────┬──────────────┬─────────────────────┬─────────────────────┬───────────┐
+│ #    │ Phase        │ Tool                │ Summary             │ Time (ms) │
+├──────┼──────────────┼─────────────────────┼─────────────────────┼───────────┤
+│ 1    │ understand   │ -                   │ Extracted task      │      0.08 │
+│      │              │                     │ context (focus:     │           │
+│      │              │                     │ general)            │           │
+│ 2    │ plan         │ -                   │ Constructed 7-step  │      0.13 │
+│      │              │                     │ tool execution plan │           │
+│ 3    │ execute_tool │ openapi_parser      │ Executed            │      3.12 │
+│      │              │                     │ openapi_parser      │           │
+│      │              │                     │ cleanly             │           │
+│ 4    │ execute_tool │ connectivity_diagn… │ Executed            │      0.12 │
+│      │              │                     │ connectivity_diagn… │           │
+│      │              │                     │ cleanly             │           │
+│ 5    │ execute_tool │ authentication_dia… │ Executed            │      0.33 │
+│      │              │                     │ authentication_dia… │           │
+│      │              │                     │ (2 finding(s)       │           │
+│      │              │                     │ produced)           │           │
+│ 6    │ execute_tool │ request_diagnostics │ Executed            │      0.22 │
+│      │              │                     │ request_diagnostics │           │
+│      │              │                     │ (2 finding(s)       │           │
+│      │              │                     │ produced)           │           │
+│ 7    │ execute_tool │ schema_diagnostics  │ Executed            │      1.60 │
+│      │              │                     │ schema_diagnostics  │           │
+│      │              │                     │ cleanly             │           │
+│ 8    │ execute_tool │ response_diagnosti… │ Executed            │      0.06 │
+│      │              │                     │ response_diagnosti… │           │
+│      │              │                     │ cleanly             │           │
+│ 9    │ execute_tool │ integration_diagno… │ Executed            │      1.28 │
+│      │              │                     │ integration_diagno… │           │
+│      │              │                     │ cleanly             │           │
+│ 10   │ analyze      │ -                   │ Ranked 3 root-cause │      0.66 │
+│      │              │                     │ hypothesis/hypothe… │           │
+│      │              │                     │ (top: Malformed     │           │
+│      │              │                     │ JSON in Request     │           │
+│      │              │                     │ Payload @ 100%      │           │
+│      │              │                     │ confidence)         │           │
+│ 11   │ remediate    │ -                   │ Generated 3         │      0.87 │
+│      │              │                     │ actionable          │           │
+│      │              │                     │ remediation         │           │
+│      │              │                     │ proposal(s) with    │           │
+│      │              │                     │ reviewable diffs    │           │
+└──────┴──────────────┴─────────────────────┴─────────────────────┴───────────┘
+                     Deterministic Diagnostic Findings (4)                     
+┌────────────┬─────────────┬─────────────────┬───────────────┬────────────────┐
+│            │             │                 │ Finding &     │                │
+│ ID         │ Severity    │ Category        │ Evidence      │ Recommendation │
+├────────────┼─────────────┼─────────────────┼───────────────┼────────────────┤
+│ REQ-004    │ CRITICAL    │ request         │ Malformed     │ Fix syntax     │
+│            │ (100%)      │                 │ JSON in       │ errors         │
+│            │             │                 │ Request       │ (trailing      │
+│            │             │                 │ Payload       │ commas,        │
+│            │             │                 │ The request   │ unquoted keys, │
+│            │             │                 │ body is not   │ or unescaped   │
+│            │             │                 │ valid JSON:   │ quotes) in the │
+│            │             │                 │ Expecting     │ JSON payload.  │
+│            │             │                 │ property name │                │
+│            │             │                 │ enclosed in   │                │
+│            │             │                 │ double quotes │                │
+│            │             │                 │ at line 1,    │                │
+│            │             │                 │ column 2.     │                │
+│            │             │                 │ •             │                │
+│            │             │                 │ JSONDecodeEr… │                │
+│            │             │                 │ Expecting     │                │
+│            │             │                 │ property name │                │
+│            │             │                 │ enclosed in   │                │
+│            │             │                 │ double quotes │                │
+│            │             │                 │ (line 1, col  │                │
+│            │             │                 │ 2)            │                │
+├────────────┼─────────────┼─────────────────┼───────────────┼────────────────┤
+│ AUTH-004   │ HIGH        │ authentication  │ Duplicate     │ Ensure the     │
+│            │ (99%)       │                 │ 'Bearer'      │ token string   │
+│            │             │                 │ Prefix in     │ does not       │
+│            │             │                 │ Authorization │ already        │
+│            │             │                 │ Header        │ include the    │
+│            │             │                 │ The           │ 'Bearer '      │
+│            │             │                 │ Authorization │ prefix before  │
+│            │             │                 │ header        │ formatting the │
+│            │             │                 │ contains a    │ Authorization  │
+│            │             │                 │ duplicated    │ header.        │
+│            │             │                 │ 'Bearer       │                │
+│            │             │                 │ Bearer ...'   │                │
+│            │             │                 │ prefix, which │                │
+│            │             │                 │ causes token  │                │
+│            │             │                 │ verification  │                │
+│            │             │                 │ failure.      │                │
+│            │             │                 │ •             │                │
+│            │             │                 │ Authorization │                │
+│            │             │                 │ header starts │                │
+│            │             │                 │ with 'Bearer  │                │
+│            │             │                 │ Bearer '.     │                │
+├────────────┼─────────────┼─────────────────┼───────────────┼────────────────┤
+│ AUTH-008   │ HIGH        │ authentication  │ HTTP 401      │ Check previous │
+│            │ (99%)       │                 │ Unauthorized  │ AUTH findings  │
+│            │             │                 │ Response      │ for missing    │
+│            │             │                 │ The endpoint  │ headers,       │
+│            │             │                 │ rejected the  │ expired JWT    │
+│            │             │                 │ request due   │ claims, or     │
+│            │             │                 │ to missing,   │ invalid API    │
+│            │             │                 │ invalid, or   │ keys, and      │
+│            │             │                 │ expired       │ confirm the    │
+│            │             │                 │ authenticati… │ token belongs  │
+│            │             │                 │ credentials.  │ to the target  │
+│            │             │                 │ • Response    │ environment.   │
+│            │             │                 │ status: 401   │                │
+│            │             │                 │ Unauthorized  │                │
+│            │             │                 │ • Request     │                │
+│            │             │                 │ headers sent  │                │
+│            │             │                 │ (redacted):   │                │
+│            │             │                 │ {"Authorizat… │                │
+│            │             │                 │ "Bearer       │                │
+│            │             │                 │ ***REDACTED*… │                │
+├────────────┼─────────────┼─────────────────┼───────────────┼────────────────┤
+│ REQ-002    │ MEDIUM      │ request         │ Missing       │ Include the    │
+│            │ (95%)       │                 │ Required      │ missing        │
+│            │             │                 │ Request       │ header(s)      │
+│            │             │                 │ Header(s)     │ (X-Idempotenc… │
+│            │             │                 │ The request   │ Content-Type)  │
+│            │             │                 │ is missing    │ in the request │
+│            │             │                 │ required HTTP │ configuration. │
+│            │             │                 │ header(s):    │                │
+│            │             │                 │ X-Idempotenc… │                │
+│            │             │                 │ Content-Type. │                │
+│            │             │                 │ • Missing     │                │
+│            │             │                 │ headers:      │                │
+│            │             │                 │ X-Idempotenc… │                │
+│            │             │                 │ Content-Type  │                │
+└────────────┴─────────────┴─────────────────┴───────────────┴────────────────┘
+                         Ranked Root-Cause Hypotheses                          
+┌────────┬──────────────────────────────────────┬──────────────┬──────────────┐
+│ Rank   │ Hypothesis                           │ Confidence   │ Status       │
+├────────┼──────────────────────────────────────┼──────────────┼──────────────┤
+│ #1     │ Malformed JSON in Request Payload    │ 100%         │ confirmed    │
+│        │ The request body is not valid JSON:  │              │              │
+│        │ Expecting property name enclosed in  │              │              │
+│        │ double quotes at line 1, column 2.   │              │              │
+│ #2     │ Duplicate 'Bearer' Prefix in         │ 99%          │ confirmed    │
+│        │ Authorization Header                 │              │              │
+│        │ The Authorization header contains a  │              │              │
+│        │ duplicated 'Bearer Bearer ...'       │              │              │
+│        │ prefix, which causes token           │              │              │
+│        │ verification failure.                │              │              │
+│ #3     │ Missing Required Request Header(s)   │ 95%          │ confirmed    │
+│        │ The request is missing required HTTP │              │              │
+│        │ header(s): X-Idempotency-Key,        │              │              │
+│        │ Content-Type.                        │              │              │
+└────────┴──────────────────────────────────────┴──────────────┴──────────────┘
